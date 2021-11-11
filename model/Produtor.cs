@@ -7,23 +7,25 @@ using System.Threading.Tasks;
 
 namespace ControleBovideo.model
 {
-    [Table("usuario")]
-    public class Usuario
+    [Table("produtor")]
+    public class Produtor
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Column("username")]
+        [Column("id_endereco")]
+        public int Id_endereco { get; set; }
+        [Column("nome")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        public string Username { get; set; }
-        [Column("password")]
-        [Required(ErrorMessage = "Campo obrigatório")]
-        [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        public string Password { get; set; }
-        [Column("role")]
-        public string Role { get; set; }
+        public string Nome { get; set; }
+        [Column("cpf")]
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        [StringLength(11, ErrorMessage = "CPF invalido!")]
+        public string Cpf { get; set; }
+        [Column("id_usuario")]
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        public int Id_usuario { get; set; }
     }
 }

@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace ControleBovideo.model
 {
-    [Table("usuario")]
-    public class Usuario
+    [Table("endereco")]
+    public class Endereco
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Column("username")]
+        [Column("id_municipio")]
+        [Required(ErrorMessage = "Campo obrigatório")]
+        public int Id_municipio { get; set; }
+        [Column("rua")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        public string Username { get; set; }
-        [Column("password")]
+        public string Rua { get; set; }
+        [Column("numero")]
         [Required(ErrorMessage = "Campo obrigatório")]
-        [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
-        public string Password { get; set; }
-        [Column("role")]
-        public string Role { get; set; }
+        [MaxLength(255, ErrorMessage = "O campo deve ter no maximo 255 caracteres")]
+        public string Numero { get; set; }
     }
 }
