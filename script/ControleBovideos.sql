@@ -1,4 +1,4 @@
-create database controleBovideos
+CREATE DATABASE controleBovideos
 GO
 
 CREATE TABLE [especie_bovideo] (
@@ -23,6 +23,14 @@ CREATE TABLE [municipio] (
 )
 GO
 
+CREATE TABLE [usuario] (
+	id int NOT NULL  PRIMARY KEY IDENTITY(1,1),
+	username varchar(255) NOT NULL,
+	password varchar(255) NOT NULL,
+	role varchar(255) NOT NULL
+)
+GO
+
 CREATE TABLE [endereco] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_municipio int NOT NULL REFERENCES municipio(id),
@@ -35,7 +43,8 @@ CREATE TABLE [produtor] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_endereco int NOT NULL REFERENCES endereco(id),
 	nome varchar(255) NOT NULL,
-	cpf varchar(255) NOT NULL
+	cpf varchar(255) NOT NULL,
+	id_usuario int NOT NULL REFERENCES usuario(id)
 )
 GO
 
