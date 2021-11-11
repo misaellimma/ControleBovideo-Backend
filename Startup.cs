@@ -39,7 +39,7 @@ namespace ControleBovideo
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ControleBovideo", Version = "v1" });
             });
 
-            //var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
 
             services.AddAuthentication(x =>
             {
