@@ -22,7 +22,6 @@ namespace ControleBovideo.model
         public string Nome { get; set; }
         [Column("cpf")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        [StringLength(11, ErrorMessage = "CPF invalido!")]
         public string Cpf { get; set; }
         [Column("id_usuario")]
         [Required(ErrorMessage = "Campo obrigatório!")]

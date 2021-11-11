@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ControleBovideo.model
 {
     [Table("registro_vacina")]
-    public class Registro_vacina
+    public class RegistroVacina
     {
         [Key]
         [Column("id")]

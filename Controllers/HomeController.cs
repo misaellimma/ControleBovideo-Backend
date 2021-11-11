@@ -2,6 +2,7 @@
 using ControleBovideo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,19 +27,25 @@ namespace ControleBovideo.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<dynamic>> Authenticate([FromBody] Usuario model)
         {
+            if (model == null)
+            {
+                return NotFound();
+            }
             // Recupera o usuário
-            //var user = UserRepository.Get(model.Username, model.Password);
-            var user = Contexto.Usuarios.First(e => e.Username == model.Username && e.Password == model.Password);
+            var user = new Usuario();
+            user = await Contexto.Usuarios.FirstOrDefaultAsync(e => e.Username == model.Username && e.Password == model.Password);
             // Verifica se o usuário existe
             if (user == null)
+            {
                 return NotFound(new { message = "Usuário ou senha inválidos" });
+            }
 
             // Gera o Token
             var token = TokenService.GenerateToken(user);
 
             // Oculta a senha
             user.Password = "";
-
+            
             // Retorna os dados
             return new
             {
