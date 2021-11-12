@@ -30,22 +30,32 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<Registro_vacinaController>/5
-        [HttpGet("{id}")]
+        [HttpGet("propriedade={id}")]
         [Authorize]
-        public async Task<ActionResult<RegistroVacina>> Get(int? id)
+        public async Task<ActionResult<dynamic>> Get(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
-
-            var municipio = await contexto.RegistroVacinas.FindAsync(id);
-
-            if (municipio == null)
+            var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
+            
+            if (rebanhos == null)
             {
                 return NotFound();
             }
-            return municipio;
+            List<RegistroVacina> registroVacinas = new List<RegistroVacina>();
+            
+            foreach(var rebanho in rebanhos)
+            {
+                var registros = await contexto.RegistroVacinas.Where(e => e.Id_rebanho == rebanho.Id).ToListAsync();
+                foreach(var rv in registros)
+                {
+                    registroVacinas.Add(rv);
+                }
+            }
+
+            return registroVacinas;
         }
 
         // POST api/<Registro_vacinaController>
@@ -59,7 +69,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.RegistroVacinas.AddAsync(registroVacina);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = registroVacina.Id });
+            return CreatedAtAction(nameof(Get), new { registroVacina });
         }
 
         // PUT api/<Registro_vacinaController>/5
@@ -88,7 +98,27 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = registroVacina.Id, registroVacina });
+            return CreatedAtAction(nameof(Get), new { registroVacina });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var registroVacina = await contexto.RegistroVacinas.FindAsync(id);
+            if (registroVacina == null)
+            {
+                return NotFound();
+            }
+
+            contexto.RegistroVacinas.Remove(registroVacina);
+            await contexto.SaveChangesAsync();
+
+            return NoContent();
         }
 
         private Boolean RegistroVacinaExists(int id) => contexto.RegistroVacinas.Any(e => e.Id == id);

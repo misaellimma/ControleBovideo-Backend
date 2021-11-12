@@ -30,22 +30,65 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<VendaController>/5
-        [HttpGet("{id}")]
+        [HttpGet("venda={id}")]
         [Authorize]
-        public async Task<ActionResult<Venda>> Get(int? id)
+        public async Task<ActionResult<dynamic>> GetVenda(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            List<Venda> todasVendas = new List<Venda>();
 
-            var venda = await contexto.Vendas.FindAsync(id);
-
-            if (venda == null)
+            var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
+            foreach(var propriedade in propriedades)
+            {
+                var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == propriedade.Id).ToListAsync();
+                foreach(var rebanho in rebanhos)
+                {
+                    var vendas = await contexto.Vendas.Where(e => e.Propriedade_origem == rebanho.Id_propriedade).ToListAsync();
+                    foreach(var venda in vendas)
+                    {
+                        todasVendas.Add(venda);
+                    }
+                }
+            }
+            if (todasVendas == null)
             {
                 return NotFound();
             }
-            return venda;
+            return todasVendas;
+        }
+
+        // GET api/<VendaController>/5
+        [HttpGet("compra={id}")]
+        [Authorize]
+        public async Task<ActionResult<dynamic>> GetCompra(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            List<Venda> todasVendas = new List<Venda>();
+
+            var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
+            foreach (var propriedade in propriedades)
+            {
+                var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == propriedade.Id).ToListAsync();
+                foreach (var rebanho in rebanhos)
+                {
+                    var vendas = await contexto.Vendas.Where(e => e.Propriedade_destino == rebanho.Id_propriedade).ToListAsync();
+                    foreach (var venda in vendas)
+                    {
+                        todasVendas.Add(venda);
+                    }
+                }
+            }
+            if (todasVendas == null)
+            {
+                return NotFound();
+            }
+            return todasVendas;
         }
 
         // POST api/<VendaController>
@@ -89,6 +132,26 @@ namespace ControleBovideo.Controllers
                 }
             }
             return CreatedAtAction(nameof(Get), new { id = venda.Id, venda });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var venda = await contexto.Vendas.FindAsync(id);
+            if (venda == null)
+            {
+                return NotFound();
+            }
+
+            contexto.Vendas.Remove(venda);
+            await contexto.SaveChangesAsync();
+
+            return NoContent();
         }
 
         private Boolean VendaExists(int id) => contexto.Vendas.Any(e => e.Id == id);

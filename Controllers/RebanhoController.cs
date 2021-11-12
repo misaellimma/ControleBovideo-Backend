@@ -21,31 +21,9 @@ namespace ControleBovideo.Controllers
             this.contexto = contexto;
         }
 
-        // GET: api/<RebanhoController>
-        [HttpGet]
-        [Authorize]
         public async Task<List<Rebanho>> Get()
         {
             return await contexto.Rebanhos.ToListAsync();
-        }
-
-        // GET api/<RebanhoController>/5
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<Rebanho>> Get(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rebanho = await contexto.Rebanhos.FindAsync(id);
-
-            if (rebanho == null)
-            {
-                return NotFound();
-            }
-            return rebanho;
         }
 
         [HttpGet("produtor={id}")]
@@ -74,6 +52,15 @@ namespace ControleBovideo.Controllers
                     rebanho.Add(r);
                 }
             }
+            return rebanho;
+        }
+
+        [HttpGet("propriedade={id}")]
+        [Authorize]
+        public async Task<List<Rebanho>> GetAnimalPropriedade(int? id) 
+        { 
+            var rebanho = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
+            
             return rebanho;
         }
 
@@ -118,6 +105,26 @@ namespace ControleBovideo.Controllers
                 }
             }
             return CreatedAtAction(nameof(Get), new { id = rebanho.Id, rebanho });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var rebanho = await contexto.Rebanhos.FindAsync(id);
+            if (rebanho == null)
+            {
+                return NotFound();
+            }
+
+            contexto.Rebanhos.Remove(rebanho);
+            await contexto.SaveChangesAsync();
+
+            return NoContent();
         }
 
         private Boolean RebanhoExists(int id) => contexto.Rebanhos.Any(e => e.Id == id);
