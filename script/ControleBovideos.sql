@@ -60,7 +60,8 @@ CREATE TABLE [rebanho] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_especie int NOT NULL REFERENCES especie_bovideo(id),
 	id_propriedade int NOT NULL REFERENCES propriedade(id),
-	qtde int NOT NULL
+	qtde_total int NOT NULL,
+	qtde_vacinado int NOT NULL
 )
 GO
 CREATE TABLE [registro_vacina] (

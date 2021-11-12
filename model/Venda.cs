@@ -25,5 +25,9 @@ namespace ControleBovideo.model
         [Column("qtde_vendida")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         public int Qtde_vendida { get; set; }
+        [Column("data")]
+        public DateTime Data { get; set; }
+
+        
     }
 }

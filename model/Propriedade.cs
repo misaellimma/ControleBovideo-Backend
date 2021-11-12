@@ -21,6 +21,7 @@ namespace ControleBovideo.model
         public int Id_municipio { get; set; }
         [Column("incricao_estadual")]
         [Required(ErrorMessage = "Campo obrigatório!")]
+        [RegularExpression("[0-9]{3}[.][0-9]{3}[.][0-9]{3}[.][-][0-9]{2}")]
         public string Incricao_estadual { get; set; }
         [Column("nome_propriedade")]
         [Required(ErrorMessage = "Campo obrigatório!")]

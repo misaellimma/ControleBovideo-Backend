@@ -20,10 +20,17 @@ namespace ControleBovideo.Controllers
         {
             this.contexto = contexto;
         }
-
+        [HttpGet]
+        [Authorize]
         public async Task<List<Rebanho>> Get()
         {
             return await contexto.Rebanhos.ToListAsync();
+        }
+
+        public Rebanho Get(int? id)
+        {
+            var rebanho = contexto.Rebanhos.Find(id);   
+            return rebanho;
         }
 
         [HttpGet("produtor={id}")]
@@ -32,17 +39,6 @@ namespace ControleBovideo.Controllers
         {
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
             List<Rebanho> rebanho = new List<Rebanho>();
-
-            /*var rebanho = contexto.Rebanhos
-                .Join(contexto.Propriedades, re => re.Id_propriedade, propriedade => propriedade.Id, (re, propriedade) => new { re, propriedade })
-                .Join(contexto.Produtores, propriedade => propriedade.propriedade.Id, produtor => produtor.Id, (propriedade, produtor) => new { propriedade, produtor })
-                .Select(e => new
-                {
-                    e.propriedade.re.Id,
-                    e.propriedade.re.Id_propriedade,
-                    e.propriedade.re.Id_especie,
-                    e.propriedade.re.Qtde
-                });*/
             
             foreach (var propriedade in propriedades)
             {

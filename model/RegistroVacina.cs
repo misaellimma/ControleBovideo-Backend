@@ -20,10 +20,35 @@ namespace ControleBovideo.model
         [Required(ErrorMessage = "Campo obrigatório!")]
         public int Id_vacina { get; set; }
         [Column("data")]
-        [Required(ErrorMessage = "Campo obrigatório!")]
         public DateTime Data { get; set; }
         [Column("qtde_vacinado")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         public int Qtde_vacinado { get; set; }
+
+        public bool ValidarDataVacina(DateTime date)
+        {
+            TimeSpan diffData = date.Subtract(Data);
+            if (diffData.Days > 365)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CalculoData(DateTime date)
+        {
+            TimeSpan diff_data = this.Data.Subtract(date);
+            if(diff_data.Days > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

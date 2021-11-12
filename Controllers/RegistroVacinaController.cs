@@ -67,8 +67,36 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
-            await contexto.RegistroVacinas.AddAsync(registroVacina);
+
+            registroVacina.Data = DateTime.Now;//armazena o horario do registro
+
+            //busca o ultimo registro de vacina do rebanho
+            var rv = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastOrDefaultAsync(e => e.Id_rebanho == registroVacina.Id_rebanho);
+            
+            Rebanho rebanho = new Rebanho();
+            //busca o rebanho
+            rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
+
+            if (rv.ValidarDataVacina(rv.Data))
+            {
+                await contexto.RegistroVacinas.AddAsync(registroVacina);
+                rebanho.CreditarSaldoVacinado(registroVacina.Qtde_vacinado);
+                contexto.Rebanhos.Update(rebanho);
+
+            }
+            else if (!rv.ValidarDataVacina(rv.Data) && rebanho.ValidarQtdeVacinado())
+            {
+                await contexto.RegistroVacinas.AddAsync(registroVacina);
+                rebanho.CreditarSaldoVacinado(registroVacina.Qtde_vacinado);
+                contexto.Rebanhos.Update(rebanho);
+            }
+            else
+            {
+                return NotFound("Registro não foi criado!");
+            }      
+
             await contexto.SaveChangesAsync();
+
             return CreatedAtAction(nameof(Get), new { registroVacina });
         }
 
@@ -107,18 +135,29 @@ namespace ControleBovideo.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Identificador vazio!");
             }
             var registroVacina = await contexto.RegistroVacinas.FindAsync(id);
+            
             if (registroVacina == null)
             {
-                return NotFound();
+                return NotFound("Não possui registro na base de dados!");
+            }
+            var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
+            var venda = await contexto.Vendas.OrderBy(e => e.Id)
+                        .Where(e => e.Propriedade_origem == rebanho.Id).LastAsync();
+            
+            if (registroVacina.CalculoData(venda.Data))
+            {
+                contexto.RegistroVacinas.Remove(registroVacina);
+                await contexto.SaveChangesAsync();
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("Não pode ser deletado, pois já foi vendido!");
             }
 
-            contexto.RegistroVacinas.Remove(registroVacina);
-            await contexto.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private Boolean RegistroVacinaExists(int id) => contexto.RegistroVacinas.Any(e => e.Id == id);
