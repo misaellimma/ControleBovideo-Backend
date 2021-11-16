@@ -46,7 +46,7 @@ namespace ControleBovideo.Controllers
                 var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == propriedade.Id).ToListAsync();
                 foreach(var rebanho in rebanhos)
                 {
-                    var vendas = await contexto.Vendas.Where(e => e.Propriedade_origem == rebanho.Id_propriedade).ToListAsync();
+                    var vendas = await contexto.Vendas.Where(e => e.Rebanho_origem == rebanho.Id_propriedade).ToListAsync();
                     foreach(var venda in vendas)
                     {
                         todasVendas.Add(venda);
@@ -77,7 +77,7 @@ namespace ControleBovideo.Controllers
                 var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == propriedade.Id).ToListAsync();
                 foreach (var rebanho in rebanhos)
                 {
-                    var vendas = await contexto.Vendas.Where(e => e.Propriedade_destino == rebanho.Id_propriedade).ToListAsync();
+                    var vendas = await contexto.Vendas.Where(e => e.Rebanho_destino == rebanho.Id_propriedade).ToListAsync();
                     foreach (var venda in vendas)
                     {
                         todasVendas.Add(venda);
@@ -100,9 +100,36 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
+            venda.Data = DateTime.Now;
+
+            Rebanho rebanhoOrigem = new Rebanho();
+            rebanhoOrigem = await contexto.Rebanhos.FindAsync(venda.Rebanho_origem);
+            if (!rebanhoOrigem.DebitarSaldoRebanho(venda.Qtde_vendida))
+            {
+                return NotFound("Saldo do rebanho vacinado de origem insuficiente!");
+            }
+
+            Rebanho rebanhoDestino = new Rebanho();
+            rebanhoDestino = await contexto.Rebanhos.FindAsync(venda.Rebanho_destino);
+            rebanhoDestino.CreditarSaldoRebanho(venda.Qtde_vendida);
+            
+            if(rebanhoOrigem.Id_especie != rebanhoDestino.Id_especie)
+            {
+                return NotFound("O rebanho deve ser da mesma espécie!");
+            }
+            var registroVacina = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastAsync(e => e.Id_rebanho == rebanhoOrigem.Id);
+            
+            if(venda.Data.Year != registroVacina.Data.Year)
+            {
+                return NotFound("Animais não foram vacinados no ano de " + venda.Data.Year);
+            }
+
+            contexto.Rebanhos.Update(rebanhoOrigem);
+            contexto.Rebanhos.Update(rebanhoDestino);
+
             await contexto.Vendas.AddAsync(venda);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = venda.Id });
+            return CreatedAtAction(nameof(Get), new { venda });
         }
 
         // PUT api/<VendaController>/5
@@ -131,7 +158,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = venda.Id, venda });
+            return CreatedAtAction(nameof(Get), new { venda });
         }
 
         [HttpDelete("{id}")]

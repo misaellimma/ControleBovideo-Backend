@@ -36,14 +36,14 @@ namespace ControleBovideo.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Identificador vazio!");
             }
 
             var propriedade = await contexto.Propriedades.FindAsync(id);
 
             if (propriedade == null)
             {
-                return NotFound();
+                return NotFound("Não existe a propriedade na base de dados!");
             }
             return propriedade;
         }
@@ -54,24 +54,39 @@ namespace ControleBovideo.Controllers
         {
             if (inscricao == null)
             {
-                return NotFound();
+                return NotFound("Inscrição Estadual vazia!");
             }
 
-            var propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Incricao_estadual == inscricao);
+            Propriedade propriedade = new Propriedade();
+
+            if (!propriedade.ValidarInscricaoEstadual(inscricao))
+            {
+                return NotFound("Incrição Estadual inválida!");
+            }
+
+            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Incricao_estadual == inscricao);
 
             if (propriedade == null)
             {
-                return NotFound();
+                return NotFound("Não existe a propriedade na base de dados!");
             }
             return propriedade;
         }
 
         [HttpGet("idprodutor={id}")]
         [Authorize]
-        public async Task<List<Propriedade>> GetPropriedadesProdutor(int id)
+        public async Task<ActionResult<dynamic>> GetPropriedadesProdutor(int? id)
         {
+            if (id == null)
+            {
+                return NotFound("Identificador vazio!");
+            }
             var propriedade = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
 
+            if (propriedade == null)
+            {
+                return NotFound("Não existe a propriedade na base de dados!");
+            }
             return propriedade;
         }
 
@@ -84,9 +99,15 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
+
+            if (!propriedade.ValidarInscricaoEstadual(propriedade.Incricao_estadual))
+            {
+                return NotFound("Incrição Estadual inválida!");
+            }
+
             await contexto.Propriedades.AddAsync(propriedade);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = propriedade.Id });
+            return CreatedAtAction(nameof(Get), new { propriedade });
         }
 
         // PUT api/<PropriedadeController>/5
@@ -96,7 +117,7 @@ namespace ControleBovideo.Controllers
         {
             if (id != propriedade.Id)
             {
-                return BadRequest();
+                return BadRequest("Id da Url está divergente do body!");
             }
 
             contexto.Entry(propriedade).State = EntityState.Modified;
@@ -108,7 +129,7 @@ namespace ControleBovideo.Controllers
             {
                 if (!PropriedadeExists(propriedade.Id))
                 {
-                    return NotFound();
+                    return NotFound("Não existe a propriedade na base de dados!");
                 }
                 else
                 {

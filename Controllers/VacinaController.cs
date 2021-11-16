@@ -59,7 +59,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.Vacinas.AddAsync(vacina);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = vacina.Id });
+            return CreatedAtAction(nameof(Get), new { vacina });
         }
 
         // PUT api/<VacinaController>/5
@@ -88,7 +88,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = vacina.Id, vacina });
+            return CreatedAtAction(nameof(Get), new { vacina });
         }
 
         private Boolean VacinaExists(int id) => contexto.Vacinas.Any(e => e.Id == id);

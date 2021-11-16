@@ -37,14 +37,14 @@ namespace ControleBovideo.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Identificador vazio!");
             }
 
             var produtor = await contexto.Produtores.FindAsync(id);
 
             if (produtor == null)
             {
-                return NotFound();
+                return NotFound("Não existe o produtor na base de dados!");
             }
             return produtor;
         }
@@ -56,14 +56,19 @@ namespace ControleBovideo.Controllers
         {
             if (cpf == null)
             {
-                return NotFound();
+                return NotFound("CPF vazio!");
             }
-
-            var produtor = await contexto.Produtores.FirstOrDefaultAsync(e => e.Cpf == cpf);
-
+            Produtor produtor = new Produtor();
+            
+            if (!produtor.ValidaCpf(cpf))
+            {
+                return NotFound("CPF invalido!");
+            }
+            produtor = await contexto.Produtores.FirstOrDefaultAsync(e => e.Cpf == cpf);
+            
             if (produtor == null)
             {
-                return NotFound();
+                return NotFound("Não existe o CPF na base de dados!");
             }
             return produtor;
         }
@@ -77,6 +82,13 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
+            produtor.Id = 0;
+
+            if (!produtor.ValidaCpf(produtor.Cpf))
+            {
+                return NotFound("CPF invalido!");
+            }
+
             await contexto.Produtores.AddAsync(produtor);
             await contexto.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = produtor.Id });
@@ -89,7 +101,7 @@ namespace ControleBovideo.Controllers
         {
             if (id != produtor.Id)
             {
-                return BadRequest();
+                return BadRequest("Id da Url está divergente do body!");
             }
 
             contexto.Entry(produtor).State = EntityState.Modified;
@@ -101,7 +113,7 @@ namespace ControleBovideo.Controllers
             {
                 if (!ProdutorExists(produtor.Id))
                 {
-                    return NotFound();
+                    return NotFound("Produtor não existe!");
                 }
                 else
                 {

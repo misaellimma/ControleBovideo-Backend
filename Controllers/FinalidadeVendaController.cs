@@ -60,7 +60,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.FinalidadeVendas.AddAsync(finalidadeVenda);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = finalidadeVenda.Id });
+            return CreatedAtAction(nameof(Get), new { finalidadeVenda });
         }
 
         // PUT api/<FinalidadeVendaController>/5
@@ -89,7 +89,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = finalidadeVenda.Id, finalidadeVenda });
+            return CreatedAtAction(nameof(Get), new { finalidadeVenda });
         }
 
         private Boolean FinalidadeVendaExists(int id) => contexto.FinalidadeVendas.Any(e => e.Id == id);

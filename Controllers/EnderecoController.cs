@@ -37,7 +37,7 @@ namespace ControleBovideo.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Identificador vazio!");
             }
 
             var endereco = await contexto.Enderecos.FindAsync(id);
@@ -60,7 +60,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.Enderecos.AddAsync(endereco);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = endereco.Id });
+            return CreatedAtAction(nameof(Get), new { endereco });
         }
 
         // PUT api/<EnderecoController>/5
@@ -89,7 +89,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = endereco.Id, endereco });
+            return CreatedAtAction(nameof(Get), new { endereco });
         }
 
         private Boolean EnderecoExists(int id) => contexto.Enderecos.Any(e => e.Id == id);

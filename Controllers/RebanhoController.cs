@@ -71,7 +71,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.Rebanhos.AddAsync(rebanho);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = rebanho.Id });
+            return CreatedAtAction(nameof(Get), new { rebanho });
         }
 
         // PUT api/<RebanhoController>/5
@@ -100,7 +100,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = rebanho.Id, rebanho });
+            return CreatedAtAction(nameof(Get), new { rebanho });
         }
 
         [HttpDelete("{id}")]

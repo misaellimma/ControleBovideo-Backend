@@ -21,12 +21,66 @@ namespace ControleBovideo.model
         public int Id_municipio { get; set; }
         [Column("incricao_estadual")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        [RegularExpression("[0-9]{3}[.][0-9]{3}[.][0-9]{3}[.][-][0-9]{2}")]
+        
         public string Incricao_estadual { get; set; }
         [Column("nome_propriedade")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         public string Nome_propriedade { get; set; }
+
+        public bool ValidarInscricaoEstadual(string pInscr)
+        {
+            bool retorno = false;
+            string strBase;
+            string strBase2;
+            string strOrigem;
+            string strDigito1;
+            int intPos;
+            int intValor;
+            int intSoma = 0;
+            int intResto;
+            strBase = "";
+            strBase2 = "";
+            strOrigem = "";
+
+            if ((pInscr.Trim().ToUpper() == "ISENTO"))
+            {
+                return true;
+            }
+
+            for (intPos = 1; intPos <= pInscr.Trim().Length; intPos++)
+            {
+                if ((("0123456789P".IndexOf(pInscr.Substring((intPos - 1), 1), 0, System.StringComparison.OrdinalIgnoreCase) + 1) > 0))
+                {
+                    strOrigem = (strOrigem + pInscr.Substring((intPos - 1), 1));
+                }
+            }
+
+            strBase = (strOrigem.Trim() + "000000000").Substring(0, 9);
+
+            int ie = int.Parse(strBase);
+            if (ie >= 285000000)
+            {
+                intSoma = 0;
+
+                for (intPos = 1; (intPos <= 8); intPos++)
+                {
+                    intValor = int.Parse(strBase.Substring((intPos - 1), 1));
+                    intValor = (intValor * (10 - intPos));
+                    intSoma = (intSoma + intValor);
+                }
+
+                intResto = (intSoma % 11);
+                strDigito1 = ((intResto < 2) ? "0" : Convert.ToString((11 - intResto))).Substring((((intResto < 2) ? "0" : Convert.ToString((11 - intResto))).Length - 1));
+                strBase2 = (strBase.Substring(0, 8) + strDigito1);
+
+                if ((strBase2 == strOrigem))
+                {
+                    retorno = true;
+                }
+            }
+            return retorno;
+        }
     }
 }

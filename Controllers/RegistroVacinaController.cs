@@ -145,7 +145,7 @@ namespace ControleBovideo.Controllers
             }
             var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
             var venda = await contexto.Vendas.OrderBy(e => e.Id)
-                        .Where(e => e.Propriedade_origem == rebanho.Id).LastAsync();
+                        .Where(e => e.Rebanho_origem == rebanho.Id).LastAsync();
             
             if (registroVacina.CalculoData(venda.Data))
             {

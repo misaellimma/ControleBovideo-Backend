@@ -44,5 +44,25 @@ namespace ControleBovideo.model
                 return false;
             }
         }
+
+        public void CreditarSaldoRebanho(int valor)
+        {
+            Qtde_total += valor;
+            Qtde_vacinado += valor;
+        }
+
+        public bool DebitarSaldoRebanho(int valor)
+        {
+            if(valor > Qtde_total || valor > Qtde_vacinado)
+            {
+                return false;
+            }
+            else
+            {
+                Qtde_total -= valor;
+                Qtde_vacinado -= valor;
+                return true;
+            }
+        }
     }
 }

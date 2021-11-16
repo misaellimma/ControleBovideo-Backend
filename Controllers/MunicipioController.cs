@@ -60,7 +60,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.Municipios.AddAsync(municipio);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = municipio.Id });
+            return CreatedAtAction(nameof(Get), new { municipio });
         }
 
         // PUT api/<MunicipioController>/5
@@ -89,7 +89,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = municipio.Id, municipio });
+            return CreatedAtAction(nameof(Get), new { municipio });
         }
 
         private Boolean MunicipioExists(int id) => contexto.Municipios.Any(e => e.Id == id);

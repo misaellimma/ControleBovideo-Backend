@@ -60,7 +60,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.EspecieBovideos.AddAsync(especieBovideo);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = especieBovideo.Id });
+            return CreatedAtAction(nameof(Get), new { especieBovideo });
         }
 
         // PUT api/<EspecieBovideoController>/5
@@ -89,7 +89,7 @@ namespace ControleBovideo.Controllers
                     throw;
                 }
             }
-            return CreatedAtAction(nameof(Get), new { id = especieBovideo.Id, especieBovideo });
+            return CreatedAtAction(nameof(Get), new { especieBovideo });
         }
 
         private Boolean EspecieBovideoExists(int id) => contexto.EspecieBovideos.Any(e => e.Id == id);
