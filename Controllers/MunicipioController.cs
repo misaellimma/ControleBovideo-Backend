@@ -24,7 +24,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<MunicipioController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Municipio>> Get()
         {
             return await contexto.Municipios.ToListAsync();
@@ -32,7 +31,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<MunicipioController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Municipio>> Get(int? id)
         {
             if(id == null)
@@ -51,7 +49,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<MunicipioController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Municipio>> Post([FromBody] Municipio municipio)
         {
             if (municipio == null)
@@ -65,7 +62,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<MunicipioController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Municipio municipio)
         {
             if (id != municipio.Id)

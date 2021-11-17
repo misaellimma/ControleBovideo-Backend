@@ -24,7 +24,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<ProdutorController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Produtor>> Get()
         {
             return await contexto.Produtores.ToListAsync();
@@ -32,7 +31,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<ProdutorController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Produtor>> Get(int? id)
         {
             if (id == null)
@@ -50,7 +48,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("usuario={id}")]
-        [Authorize]
         public async Task<ActionResult<Produtor>> GetUsuario(int? id)
         {
             if (id == null)
@@ -69,7 +66,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<ProdutorController>/5
         [HttpGet("cpf={cpf}")]
-        [Authorize]
         public async Task<ActionResult<Produtor>> GetCpf(string cpf)
         {
             if (cpf == null)
@@ -93,7 +89,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<ProdutorController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Produtor>> Post([FromBody] Produtor produtor)
         {
             if (produtor == null)
@@ -114,7 +109,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<ProdutorController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Produtor produtor)
         {
             if (id != produtor.Id)

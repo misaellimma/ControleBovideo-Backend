@@ -21,12 +21,12 @@ namespace ControleBovideo.Controllers
             this.contexto = contexto;
         }
         [HttpGet]
-        [Authorize]
         public async Task<List<Rebanho>> Get()
         {
             return await contexto.Rebanhos.ToListAsync();
         }
 
+        [HttpGet("{id}")]
         public Rebanho Get(int? id)
         {
             var rebanho = contexto.Rebanhos.Find(id);   
@@ -34,7 +34,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("idprodutor={id}")]
-        [Authorize]
         public async Task<List<Rebanho>> GetAnimalProdutor(int? id)
         {
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
@@ -52,7 +51,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("idpropriedade={id}")]
-        [Authorize]
         public async Task<List<Rebanho>> GetAnimalPropriedade(int? id) 
         { 
             var rebanho = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
@@ -62,7 +60,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<RebanhoController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Rebanho>> Post([FromBody] Rebanho rebanho)
         {
             if (rebanho == null)
@@ -76,7 +73,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<RebanhoController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Rebanho rebanho)
         {
             if (id != rebanho.Id)
@@ -104,7 +100,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

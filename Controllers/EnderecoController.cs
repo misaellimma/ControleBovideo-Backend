@@ -24,7 +24,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<EnderecoController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Endereco>> Get()
         {
             return await contexto.Enderecos.ToListAsync();
@@ -32,7 +31,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<EnderecoController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Endereco>> GetId(int? id)
         {
             if (id == null)
@@ -51,7 +49,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<EnderecoController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Endereco>> Post([FromBody] Endereco endereco)
         {
             if (endereco == null)
@@ -65,7 +62,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<EnderecoController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Endereco endereco)
         {
             if (id != endereco.Id)

@@ -18,7 +18,6 @@ namespace ControleBovideo.model
         public DbSet<Propriedade> Propriedades{ get; set; }
         public DbSet<Rebanho> Rebanhos{ get; set; }
         public DbSet<RegistroVacina> RegistroVacinas{ get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Vacina> Vacinas{ get; set; }
         public DbSet<Venda> Vendas{ get; set; }
     }

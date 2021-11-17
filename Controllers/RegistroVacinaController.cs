@@ -23,7 +23,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<Registro_vacinaController>
         [HttpGet]
-        [Authorize]
         public async Task<List<RegistroVacina>> Get()
         {
             return await contexto.RegistroVacinas.ToListAsync();
@@ -31,7 +30,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<Registro_vacinaController>/5
         [HttpGet("propriedade={id}")]
-        [Authorize]
         public async Task<ActionResult<dynamic>> Get(int? id)
         {
             if(id == null)
@@ -60,7 +58,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<Registro_vacinaController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<RegistroVacina>> Post([FromBody] RegistroVacina registroVacina)
         {
             if (registroVacina == null)
@@ -102,7 +99,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<Registro_vacinaController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] RegistroVacina registroVacina)
         {
             if (id != registroVacina.Id)
@@ -130,7 +126,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

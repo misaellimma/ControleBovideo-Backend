@@ -23,7 +23,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<VacinaController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Vacina>> Get()
         {
             return await contexto.Vacinas.ToListAsync();
@@ -31,7 +30,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<VacinaController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Vacina>> Get(int? id)
         {
             if (id == null)
@@ -50,7 +48,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<VacinaController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Vacina>> Post([FromBody] Vacina vacina)
         {
             if (vacina == null)
@@ -64,7 +61,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<VacinaController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Vacina vacina)
         {
             if (id != vacina.Id)

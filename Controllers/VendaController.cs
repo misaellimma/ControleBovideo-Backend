@@ -23,7 +23,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<VendaController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Venda>> Get()
         {
             return await contexto.Vendas.ToListAsync();
@@ -31,7 +30,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<VendaController>/5
         [HttpGet("venda={id}")]
-        [Authorize]
         public async Task<ActionResult<dynamic>> GetVenda(int? id)
         {
             if (id == null)
@@ -62,7 +60,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<VendaController>/5
         [HttpGet("compra={id}")]
-        [Authorize]
         public async Task<ActionResult<dynamic>> GetCompra(int? id)
         {
             if (id == null)
@@ -93,7 +90,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<VendaController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Venda>> Post([FromBody] Venda venda)
         {
             if (venda == null)
@@ -136,7 +132,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<VendaController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Venda venda)
         {
             if (id != venda.Id)
@@ -164,7 +159,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

@@ -24,7 +24,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<EspecieBovideoController>
         [HttpGet]
-        [Authorize]
         public async Task<List<EspecieBovideo>> Get()
         {
             return await contexto.EspecieBovideos.ToListAsync();
@@ -32,7 +31,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<EspecieBovideoController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<EspecieBovideo>> Get(int? id)
         {
             if (id == null)
@@ -51,7 +49,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<EspecieBovideoController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<EspecieBovideo>> Post([FromBody] EspecieBovideo especieBovideo)
         {
             if (especieBovideo == null)
@@ -65,7 +62,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<EspecieBovideoController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] EspecieBovideo especieBovideo)
         {
             if (id != especieBovideo.Id)

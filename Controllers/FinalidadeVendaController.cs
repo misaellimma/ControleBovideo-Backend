@@ -24,7 +24,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<FinalidadeVendaController>
         [HttpGet]
-        [Authorize]
         public async Task<List<FinalidadeVenda>> Get()
         {
             return await contexto.FinalidadeVendas.ToListAsync();
@@ -32,7 +31,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<FinalidadeVendaController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<FinalidadeVenda>> Get(int? id)
         {
             if (id == null)
@@ -51,7 +49,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<FinalidadeVendaController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<FinalidadeVenda>> Post([FromBody] FinalidadeVenda finalidadeVenda)
         {
             if (finalidadeVenda == null)
@@ -65,7 +62,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<FinalidadeVendaController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] FinalidadeVenda finalidadeVenda)
         {
             if (id != finalidadeVenda.Id)

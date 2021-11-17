@@ -23,7 +23,6 @@ namespace ControleBovideo.Controllers
 
         // GET: api/<PropriedadeController>
         [HttpGet]
-        [Authorize]
         public async Task<List<Propriedade>> Get()
         {
             return await contexto.Propriedades.ToListAsync();
@@ -31,7 +30,6 @@ namespace ControleBovideo.Controllers
 
         // GET api/<PropriedadeController>/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Propriedade>> Get(int? id)
         {
             if (id == null)
@@ -49,7 +47,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("inscricao={inscricao}")]
-        [Authorize]
         public async Task<ActionResult<Propriedade>> GetIncricao(string inscricao)
         {
             if (inscricao == null)
@@ -74,7 +71,6 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("idprodutor={id}")]
-        [Authorize]
         public async Task<ActionResult<dynamic>> GetPropriedadesProdutor(int? id)
         {
             if (id == null)
@@ -92,7 +88,6 @@ namespace ControleBovideo.Controllers
 
         // POST api/<PropriedadeController>
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Propriedade>> Post([FromBody] Propriedade propriedade)
         {
             if (propriedade == null)
@@ -112,7 +107,6 @@ namespace ControleBovideo.Controllers
 
         // PUT api/<PropriedadeController>/5
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Propriedade propriedade)
         {
             if (id != propriedade.Id)
