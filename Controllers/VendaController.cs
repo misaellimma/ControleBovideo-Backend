@@ -104,6 +104,7 @@ namespace ControleBovideo.Controllers
 
             Rebanho rebanhoOrigem = new Rebanho();
             rebanhoOrigem = await contexto.Rebanhos.FindAsync(venda.Rebanho_origem);
+
             if (!rebanhoOrigem.DebitarSaldoRebanho(venda.Qtde_vendida))
             {
                 return NotFound("Saldo do rebanho vacinado de origem insuficiente!");
@@ -129,6 +130,7 @@ namespace ControleBovideo.Controllers
 
             await contexto.Vendas.AddAsync(venda);
             await contexto.SaveChangesAsync();
+
             return CreatedAtAction(nameof(Get), new { venda });
         }
 

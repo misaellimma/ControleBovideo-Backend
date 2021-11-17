@@ -49,6 +49,24 @@ namespace ControleBovideo.Controllers
             return produtor;
         }
 
+        [HttpGet("usuario={id}")]
+        [Authorize]
+        public async Task<ActionResult<Produtor>> GetUsuario(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound("Identificador vazio!");
+            }
+
+            var produtor = contexto.Produtores.Where(e => e.Id_usuario == id).First();
+
+            if (produtor == null)
+            {
+                return NotFound("Não existe o produtor na base de dados!");
+            }
+            return produtor;
+        }
+
         // GET api/<ProdutorController>/5
         [HttpGet("cpf={cpf}")]
         [Authorize]
@@ -64,7 +82,7 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound("CPF invalido!");
             }
-            produtor = await contexto.Produtores.FirstOrDefaultAsync(e => e.Cpf == cpf);
+            produtor = await contexto.Produtores.FirstAsync(e => e.Cpf == cpf);
             
             if (produtor == null)
             {

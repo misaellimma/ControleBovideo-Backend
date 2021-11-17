@@ -64,7 +64,7 @@ namespace ControleBovideo.Controllers
                 return NotFound("Incrição Estadual inválida!");
             }
 
-            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Incricao_estadual == inscricao);
+            propriedade = await contexto.Propriedades.FirstAsync(e => e.Incricao_estadual == inscricao);
 
             if (propriedade == null)
             {

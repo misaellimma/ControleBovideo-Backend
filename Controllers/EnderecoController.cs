@@ -33,7 +33,7 @@ namespace ControleBovideo.Controllers
         // GET api/<EnderecoController>/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Endereco>> Get(int? id)
+        public async Task<ActionResult<Endereco>> GetId(int? id)
         {
             if (id == null)
             {

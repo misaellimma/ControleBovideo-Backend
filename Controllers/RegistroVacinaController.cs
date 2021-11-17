@@ -71,7 +71,7 @@ namespace ControleBovideo.Controllers
             registroVacina.Data = DateTime.Now;//armazena o horario do registro
 
             //busca o ultimo registro de vacina do rebanho
-            var rv = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastOrDefaultAsync(e => e.Id_rebanho == registroVacina.Id_rebanho);
+            var rv = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastAsync(e => e.Id_rebanho == registroVacina.Id_rebanho);
             
             Rebanho rebanho = new Rebanho();
             //busca o rebanho

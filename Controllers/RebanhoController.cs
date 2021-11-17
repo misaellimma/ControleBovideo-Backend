@@ -33,7 +33,7 @@ namespace ControleBovideo.Controllers
             return rebanho;
         }
 
-        [HttpGet("produtor={id}")]
+        [HttpGet("idprodutor={id}")]
         [Authorize]
         public async Task<List<Rebanho>> GetAnimalProdutor(int? id)
         {
@@ -51,7 +51,7 @@ namespace ControleBovideo.Controllers
             return rebanho;
         }
 
-        [HttpGet("propriedade={id}")]
+        [HttpGet("idpropriedade={id}")]
         [Authorize]
         public async Task<List<Rebanho>> GetAnimalPropriedade(int? id) 
         { 
