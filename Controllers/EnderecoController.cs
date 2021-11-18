@@ -57,7 +57,7 @@ namespace ControleBovideo.Controllers
             }
             await contexto.Enderecos.AddAsync(endereco);
             await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { endereco });
+            return CreatedAtAction(null, new { endereco.Id });
         }
 
         // PUT api/<EnderecoController>/5
@@ -86,6 +86,25 @@ namespace ControleBovideo.Controllers
                 }
             }
             return CreatedAtAction(nameof(Get), new { endereco });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var endereco = await contexto.Enderecos.FindAsync(id);
+            if (endereco == null)
+            {
+                return NotFound();
+            }
+
+            contexto.Enderecos.Remove(endereco);
+            await contexto.SaveChangesAsync();
+
+            return NoContent();
         }
 
         private Boolean EnderecoExists(int id) => contexto.Enderecos.Any(e => e.Id == id);

@@ -1,6 +1,9 @@
 CREATE DATABASE controleBovideos
 GO
 
+USE controleBovideos
+GO
+
 CREATE TABLE [especie_bovideo] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	descricao varchar(255) NOT NULL
@@ -23,14 +26,6 @@ CREATE TABLE [municipio] (
 )
 GO
 
-CREATE TABLE [usuario] (
-	id int NOT NULL  PRIMARY KEY IDENTITY(1,1),
-	username varchar(255) NOT NULL,
-	password varchar(255) NOT NULL,
-	role varchar(255) NOT NULL
-)
-GO
-
 CREATE TABLE [endereco] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_municipio int NOT NULL REFERENCES municipio(id),
@@ -43,8 +38,7 @@ CREATE TABLE [produtor] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_endereco int NOT NULL REFERENCES endereco(id),
 	nome varchar(255) NOT NULL,
-	cpf varchar(255) NOT NULL,
-	id_usuario int NOT NULL REFERENCES usuario(id)
+	cpf varchar(255) NOT NULL
 )
 GO
 
@@ -74,9 +68,10 @@ CREATE TABLE [registro_vacina] (
 GO
 CREATE TABLE [venda] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-	propriedade_origem int NOT NULL REFERENCES rebanho(id),
-	propriedade_destino int NOT NULL REFERENCES rebanho(id),
+	rebanho_origem int NOT NULL REFERENCES rebanho(id),
+	rebanho_destino int NOT NULL REFERENCES rebanho(id),
 	id_finalidade_venda int NOT NULL REFERENCES finalidade_venda(id),
-	qtde_vendida int NOT NULL
+	qtde_vendida int NOT NULL,
+	[data] datetime NOT NULL
 )
 GO
