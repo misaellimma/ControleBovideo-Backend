@@ -21,11 +21,11 @@ namespace ControleBovideo.model
         public int Id_propriedade { get; set; }
         [Column("qtde_total")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        [MinLength(1, ErrorMessage = "Campo obrigatório!")]
+        
         public int Qtde_total { get; set; }
         [Column("qtde_vacinado")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        [MinLength(1, ErrorMessage = "Campo obrigatório!")]
+        
         public int Qtde_vacinado { get; set; }
 
         public void CreditarSaldoVacinado(int saldo)

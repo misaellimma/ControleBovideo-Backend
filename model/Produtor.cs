@@ -23,10 +23,12 @@ namespace ControleBovideo.model
         [Column("cpf")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         public string Cpf { get; set; }
-        [Column("id_usuario")]
-        [Required(ErrorMessage = "Campo obrigatório!")]
-        public int Id_usuario { get; set; }
 
+        public string FormataCpf(string cpf)
+        {
+            cpf = cpf.Trim();
+            return cpf.Replace(".", "").Replace("-", "");
+        }
         public bool ValidaCpf(string cpf)
         {
 			int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };

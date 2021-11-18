@@ -33,6 +33,13 @@ namespace ControleBovideo.Controllers
             return rebanho;
         }
 
+        [HttpGet("especie={id}")]
+        public Task<List<Rebanho>> GetEspecie(int? id)
+        {
+            var rebanho = contexto.Rebanhos.Where(e => e.Id_especie == id).ToListAsync();
+            return rebanho;
+        }
+
         [HttpGet("idprodutor={id}")]
         public async Task<List<Rebanho>> GetAnimalProdutor(int? id)
         {
