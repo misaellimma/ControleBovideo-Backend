@@ -72,6 +72,30 @@ namespace ControleBovideo.Controllers
             return produtor;
         }
 
+        [HttpGet("validacpf={cpf}")]
+        public async Task<ActionResult<Produtor>> ValidaCpf(string cpf)
+        {
+            if (cpf == null)
+            {
+                return NotFound("CPF vazio!");
+            }
+            Produtor produtor = new Produtor();
+            cpf = produtor.FormataCpf(cpf);
+
+            if (!produtor.ValidaCpf(cpf))
+            {
+                return NotFound("CPF invalido!");
+            }
+
+            produtor = await contexto.Produtores.OrderBy(e => e.Id).FirstOrDefaultAsync(e => e.Cpf == cpf);
+
+            if (produtor != null)
+            {
+                return NotFound("CPF já cadastrado!");
+            }
+            return NoContent();
+        }
+
         // POST api/<ProdutorController>
         [HttpPost]
         public async Task<ActionResult<Produtor>> Post([FromBody] Produtor produtor)
@@ -81,6 +105,7 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
             produtor.Id = 0;
+            produtor.Cpf = produtor.FormataCpf(produtor.Cpf);
 
             if (!produtor.ValidaCpf(produtor.Cpf))
             {
