@@ -29,7 +29,13 @@ namespace ControleBovideo.model
         [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         public string Nome_propriedade { get; set; }
 
-        public bool ValidarInscricaoEstadual(string pInscr)
+        public string FormataInscricao()
+        {
+            Incricao_estadual = Incricao_estadual.Trim();
+            return Incricao_estadual.Replace(".", "").Replace("-", "");
+        }
+
+        public bool ValidarInscricaoEstadual()
         {
             bool retorno = false;
             string strBase;
@@ -44,16 +50,16 @@ namespace ControleBovideo.model
             strBase2 = "";
             strOrigem = "";
 
-            if ((pInscr.Trim().ToUpper() == "ISENTO"))
+            if (Incricao_estadual.Trim().ToUpper() == "ISENTO")
             {
                 return true;
             }
 
-            for (intPos = 1; intPos <= pInscr.Trim().Length; intPos++)
+            for (intPos = 1; intPos <= Incricao_estadual.Trim().Length; intPos++)
             {
-                if ((("0123456789P".IndexOf(pInscr.Substring((intPos - 1), 1), 0, System.StringComparison.OrdinalIgnoreCase) + 1) > 0))
+                if ((("0123456789P".IndexOf(Incricao_estadual.Substring((intPos - 1), 1), 0, System.StringComparison.OrdinalIgnoreCase) + 1) > 0))
                 {
-                    strOrigem = (strOrigem + pInscr.Substring((intPos - 1), 1));
+                    strOrigem = (strOrigem + Incricao_estadual.Substring((intPos - 1), 1));
                 }
             }
 

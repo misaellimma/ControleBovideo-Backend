@@ -25,7 +25,7 @@ namespace ControleBovideo.Controllers
         [HttpGet]
         public async Task<List<Propriedade>> Get()
         {
-            return await contexto.Propriedades.ToListAsync();
+            return await contexto.Propriedades.OrderBy(e => e.Id_produtor).ToListAsync();
         }
 
         // GET api/<PropriedadeController>/5
@@ -55,19 +55,47 @@ namespace ControleBovideo.Controllers
             }
 
             Propriedade propriedade = new Propriedade();
+            propriedade.Incricao_estadual =  inscricao;
+            propriedade.FormataInscricao();
 
-            if (!propriedade.ValidarInscricaoEstadual(inscricao))
+            if (!propriedade.ValidarInscricaoEstadual())
             {
                 return NotFound("Incrição Estadual inválida!");
             }
 
-            propriedade = await contexto.Propriedades.FirstAsync(e => e.Incricao_estadual == inscricao);
+            propriedade = await contexto.Propriedades.FirstAsync(e => e.Incricao_estadual == propriedade.Incricao_estadual);
 
             if (propriedade == null)
             {
                 return NotFound("Não existe a propriedade na base de dados!");
             }
             return propriedade;
+        }
+
+        [HttpGet("validainscricao={inscricao}")]
+        public async Task<ActionResult<Propriedade>> ValidaIncricao(string inscricao)
+        {
+            if (inscricao == null)
+            {
+                return NotFound("Inscrição Estadual vazia!");
+            }
+
+            Propriedade propriedade = new Propriedade();
+            propriedade.Incricao_estadual = inscricao;
+            propriedade.FormataInscricao();
+
+            if (!propriedade.ValidarInscricaoEstadual())
+            {
+                return NotFound("Incrição Estadual inválida!");
+            }
+
+            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Incricao_estadual == propriedade.Incricao_estadual);
+
+            if (propriedade != null)
+            {
+                return NotFound("Inscricao estadual já cadastrada!");
+            }
+            return NoContent();
         }
 
         [HttpGet("idprodutor={id}")]
@@ -95,7 +123,9 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
 
-            if (!propriedade.ValidarInscricaoEstadual(propriedade.Incricao_estadual))
+            propriedade.FormataInscricao();
+
+            if (!propriedade.ValidarInscricaoEstadual())
             {
                 return NotFound("Incrição Estadual inválida!");
             }

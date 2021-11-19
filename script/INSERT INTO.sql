@@ -1,3 +1,6 @@
+USE controleBovideos
+GO
+
 INSERT INTO especie_bovideo(descricao) VALUES
 ('Bovino')
 ,('Bubalino')
