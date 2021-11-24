@@ -29,6 +29,39 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<Registro_vacinaController>/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetId(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var registroVacina = await contexto.RegistroVacinas.FindAsync(id);
+            var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
+            var propriedade = await contexto.Propriedades.FindAsync(rebanho.Id_propriedade);
+            var especie = await contexto.EspecieBovideos.FindAsync(rebanho.Id_especie);
+            var vacina = await contexto.Vacinas.FindAsync(registroVacina.Id_vacina);
+            var obj = new
+            {
+                registroVacina.Id,
+                rebanho = especie.Descricao,
+                propriedade.Nome_propriedade,
+                registroVacina.Id_rebanho,
+                registroVacina.Id_vacina,
+                vacina = vacina.Nome,
+                registroVacina.Qtde_vacinado,
+                registroVacina.Data
+            };
+
+            if (registroVacina == null)
+            {
+                return NotFound();
+            }
+
+            return obj;
+        }
+
+        // GET api/<Registro_vacinaController>/5
         [HttpGet("propriedade={id}")]
         public async Task<ActionResult<dynamic>> Get(int? id)
         {
@@ -36,20 +69,32 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
-            var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
+            var rebanhos = await contexto.Rebanhos.OrderBy(e => e.Id).Where(e => e.Id_propriedade == id).ToListAsync();
             
             if (rebanhos == null)
             {
                 return NotFound();
             }
-            List<RegistroVacina> registroVacinas = new List<RegistroVacina>();
+            List<object> registroVacinas = new List<object>();
             
             foreach(var rebanho in rebanhos)
             {
                 var registros = await contexto.RegistroVacinas.Where(e => e.Id_rebanho == rebanho.Id).ToListAsync();
-                foreach(var rv in registros)
+                var especie = await contexto.EspecieBovideos.FindAsync(rebanho.Id_especie);
+                foreach (var rv in registros)
                 {
-                    registroVacinas.Add(rv);
+                    var vacina = await contexto.Vacinas.FindAsync(rv.Id_vacina);
+                    var obj = new
+                    {
+                        rv.Id,
+                        rebanho = especie.Descricao,
+                        rv.Id_rebanho,
+                        rv.Id_vacina,
+                        vacina = vacina.Nome,
+                        rv.Qtde_vacinado,
+                        rv.Data
+                    };
+                    registroVacinas.Add(obj);
                 }
             }
 
@@ -65,26 +110,39 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
 
-            registroVacina.Data = DateTime.Now;//armazena o horario do registro
-
             //busca o ultimo registro de vacina do rebanho
-            var rv = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastAsync(e => e.Id_rebanho == registroVacina.Id_rebanho);
+            var rv = await contexto.RegistroVacinas.OrderBy(e => e.Id).LastOrDefaultAsync(e => e.Id_rebanho == registroVacina.Id_rebanho);
             
             Rebanho rebanho = new Rebanho();
             //busca o rebanho
             rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
 
-            if (rv.ValidarDataVacina(rv.Data))
+            if(registroVacina.Id_vacina == 1)
             {
-                await contexto.RegistroVacinas.AddAsync(registroVacina);
-                rebanho.CreditarSaldoVacinado(registroVacina.Qtde_vacinado);
-                contexto.Rebanhos.Update(rebanho);
-
+                rebanho.CreditarSaldoVacinadoAftosa(registroVacina.Qtde_vacinado);
             }
-            else if (!rv.ValidarDataVacina(rv.Data) && rebanho.ValidarQtdeVacinado())
+            else if(registroVacina.Id_vacina == 2)
+            {
+                rebanho.CreditarSaldoVacinadoBrucelose(registroVacina.Qtde_vacinado);
+            }
+
+            if (!rebanho.ValidarQtdeVacinado())
+            {
+                return NotFound("Registro não foi criado, o número de vacinados não pode ser maior que o total do rebanho!");
+            }
+            else if(rv == null)
             {
                 await contexto.RegistroVacinas.AddAsync(registroVacina);
-                rebanho.CreditarSaldoVacinado(registroVacina.Qtde_vacinado);
+                contexto.Rebanhos.Update(rebanho);
+            }
+            else if (registroVacina.ValidarDataVacina(rv.Data) && rebanho.ValidarQtdeVacinado())
+            {
+                await contexto.RegistroVacinas.AddAsync(registroVacina);
+                contexto.Rebanhos.Update(rebanho);
+            }
+            else if (!registroVacina.ValidarDataVacina(rv.Data) && rebanho.ValidarQtdeVacinado())
+            {
+                await contexto.RegistroVacinas.AddAsync(registroVacina);
                 contexto.Rebanhos.Update(rebanho);
             }
             else

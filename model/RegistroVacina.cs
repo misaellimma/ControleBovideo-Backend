@@ -27,8 +27,7 @@ namespace ControleBovideo.model
 
         public bool ValidarDataVacina(DateTime date)
         {
-            TimeSpan diffData = date.Subtract(Data);
-            if (diffData.Days > 365)
+            if (date.Year == Data.Year)
             {
                 return true;
             }

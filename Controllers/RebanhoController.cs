@@ -27,10 +27,21 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("{id}")]
-        public Rebanho Get(int? id)
+        public object Get(int? id)
         {
-            var rebanho = contexto.Rebanhos.Find(id);   
-            return rebanho;
+            var rebanho = contexto.Rebanhos.Find(id);
+            var especie = contexto.EspecieBovideos.FirstOrDefault(e => e.Id == rebanho.Id_especie);
+            var propriedade = contexto.Propriedades.FirstOrDefault(e => e.Id == rebanho.Id_propriedade);
+            var obj = new
+            {
+                rebanho.Id,
+                especie = especie.Descricao,
+                nome_propriedade = propriedade.Nome_propriedade,
+                rebanho.Qtde_total,
+                rebanho.Qtde_vacinado_aftosa,
+                rebanho.Qtde_vacinado_brucelose
+            };
+            return obj;
         }
 
         [HttpGet("especie={id}")]
@@ -41,17 +52,29 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("idprodutor={id}")]
-        public async Task<List<Rebanho>> GetAnimalProdutor(int? id)
+        public async Task<List<dynamic>> GetAnimalProdutor(int? id)
         {
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
-            List<Rebanho> rebanho = new List<Rebanho>();
+            List<dynamic> rebanho = new List<dynamic>();
             
             foreach (var propriedade in propriedades)
             {
                 var rebanhos = await contexto.Rebanhos.Where(e => e.Id_propriedade == propriedade.Id).ToListAsync();
                 foreach(var r in rebanhos)
                 {
-                    rebanho.Add(r);
+                    var especie = contexto.EspecieBovideos.FirstOrDefault(e => e.Id == r.Id_especie);
+                    var obj = new
+                    {
+                        id = r.Id,
+                        especie = especie.Descricao,
+                        propriedade.Nome_propriedade,
+                        r.Qtde_total,
+                        r.Qtde_vacinado_aftosa,
+                        r.Qtde_vacinado_brucelose
+                    };
+
+                    
+                    rebanho.Add(obj);
                 }
             }
             return rebanho;
@@ -61,7 +84,6 @@ namespace ControleBovideo.Controllers
         public async Task<List<Rebanho>> GetAnimalPropriedade(int? id) 
         { 
             var rebanho = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
-            
             return rebanho;
         }
 
@@ -73,9 +95,23 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
-            await contexto.Rebanhos.AddAsync(rebanho);
-            await contexto.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { rebanho });
+            Rebanho re = contexto.Rebanhos.OrderBy(e => e.Id)
+                .Where(e => e.Id_especie == rebanho.Id_especie)
+                .Where(e => e.Id_propriedade == rebanho.Id_propriedade).FirstOrDefault();
+            if (re != null)
+            {
+                re.CreditarSaldoRebanho(rebanho.Qtde_total);
+                contexto.Rebanhos.Update(re);
+                contexto.SaveChanges();
+                return NoContent();
+            }
+            else
+            {
+                await contexto.Rebanhos.AddAsync(rebanho);
+                await contexto.SaveChangesAsync();
+                return CreatedAtAction(nameof(Get), new { rebanho });
+            }
+
         }
 
         // PUT api/<RebanhoController>/5
@@ -114,13 +150,22 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
             var rebanho = await contexto.Rebanhos.FindAsync(id);
+
             if (rebanho == null)
             {
                 return NotFound();
             }
+            var registro = await contexto.RegistroVacinas.Where(e => e.Id_rebanho == id).ToListAsync();
 
-            contexto.Rebanhos.Remove(rebanho);
-            await contexto.SaveChangesAsync();
+            if(registro != null)
+            {
+                return NotFound("Esse rebanho já foi vacinado!");
+            }
+            else
+            {
+                contexto.Rebanhos.Remove(rebanho);
+                await contexto.SaveChangesAsync();
+            }
 
             return NoContent();
         }

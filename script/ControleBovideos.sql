@@ -55,7 +55,8 @@ CREATE TABLE [rebanho] (
 	id_especie int NOT NULL REFERENCES especie_bovideo(id),
 	id_propriedade int NOT NULL REFERENCES propriedade(id),
 	qtde_total int NOT NULL,
-	qtde_vacinado int NOT NULL
+	qtde_vacinado_aftosa int NOT NULL,
+	qtde_vacinado_brucelose int NOT NULL
 )
 GO
 CREATE TABLE [registro_vacina] (
@@ -64,6 +65,7 @@ CREATE TABLE [registro_vacina] (
 	id_vacina int NOT NULL REFERENCES vacina(id),
 	[data] datetime NOT NULL,
 	qtde_vacinado int NOT NULL
+
 )
 GO
 CREATE TABLE [venda] (

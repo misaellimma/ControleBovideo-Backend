@@ -55,7 +55,7 @@ namespace ControleBovideo.Controllers
             }
 
             Propriedade propriedade = new Propriedade();
-            propriedade.Incricao_estadual =  inscricao;
+            propriedade.Inscricao_estadual =  inscricao;
             propriedade.FormataInscricao();
 
             if (!propriedade.ValidarInscricaoEstadual())
@@ -63,7 +63,7 @@ namespace ControleBovideo.Controllers
                 return NotFound("Incrição Estadual inválida!");
             }
 
-            propriedade = await contexto.Propriedades.FirstAsync(e => e.Incricao_estadual == propriedade.Incricao_estadual);
+            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Inscricao_estadual == propriedade.Inscricao_estadual);
 
             if (propriedade == null)
             {
@@ -81,7 +81,7 @@ namespace ControleBovideo.Controllers
             }
 
             Propriedade propriedade = new Propriedade();
-            propriedade.Incricao_estadual = inscricao;
+            propriedade.Inscricao_estadual = inscricao;
             propriedade.FormataInscricao();
 
             if (!propriedade.ValidarInscricaoEstadual())
@@ -89,7 +89,7 @@ namespace ControleBovideo.Controllers
                 return NotFound("Incrição Estadual inválida!");
             }
 
-            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Incricao_estadual == propriedade.Incricao_estadual);
+            propriedade = await contexto.Propriedades.FirstOrDefaultAsync(e => e.Inscricao_estadual == propriedade.Inscricao_estadual);
 
             if (propriedade != null)
             {

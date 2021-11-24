@@ -19,20 +19,20 @@ namespace ControleBovideo.model
         [Column("id_municipio")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         public int Id_municipio { get; set; }
-        [Column("incricao_estadual")]
+        [Column("inscricao_estadual")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         
-        public string Incricao_estadual { get; set; }
+        public string Inscricao_estadual { get; set; }
         [Column("nome_propriedade")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         [MaxLength(255, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         [MinLength(3, ErrorMessage = "O campo deve ter entre de 3 a 255 caracteres")]
         public string Nome_propriedade { get; set; }
 
-        public string FormataInscricao()
+        public void FormataInscricao()
         {
-            Incricao_estadual = Incricao_estadual.Trim();
-            return Incricao_estadual.Replace(".", "").Replace("-", "");
+            Inscricao_estadual = Inscricao_estadual.Trim();
+            this.Inscricao_estadual = Inscricao_estadual.Replace(".", "").Replace("-", "");
         }
 
         public bool ValidarInscricaoEstadual()
@@ -50,16 +50,16 @@ namespace ControleBovideo.model
             strBase2 = "";
             strOrigem = "";
 
-            if (Incricao_estadual.Trim().ToUpper() == "ISENTO")
+            if (Inscricao_estadual.Trim().ToUpper() == "ISENTO")
             {
                 return true;
             }
 
-            for (intPos = 1; intPos <= Incricao_estadual.Trim().Length; intPos++)
+            for (intPos = 1; intPos <= Inscricao_estadual.Trim().Length; intPos++)
             {
-                if ((("0123456789P".IndexOf(Incricao_estadual.Substring((intPos - 1), 1), 0, System.StringComparison.OrdinalIgnoreCase) + 1) > 0))
+                if ((("0123456789P".IndexOf(Inscricao_estadual.Substring((intPos - 1), 1), 0, System.StringComparison.OrdinalIgnoreCase) + 1) > 0))
                 {
-                    strOrigem = (strOrigem + Incricao_estadual.Substring((intPos - 1), 1));
+                    strOrigem = (strOrigem + Inscricao_estadual.Substring((intPos - 1), 1));
                 }
             }
 

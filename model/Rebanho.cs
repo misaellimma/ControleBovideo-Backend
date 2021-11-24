@@ -23,19 +23,27 @@ namespace ControleBovideo.model
         [Required(ErrorMessage = "Campo obrigatório!")]
         
         public int Qtde_total { get; set; }
-        [Column("qtde_vacinado")]
+        [Column("qtde_vacinado_aftosa")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         
-        public int Qtde_vacinado { get; set; }
+        public int Qtde_vacinado_aftosa { get; set; }
+        [Column("qtde_vacinado_brucelose")]
+        [Required(ErrorMessage = "Campo obrigatório!")]
 
-        public void CreditarSaldoVacinado(int saldo)
+        public int Qtde_vacinado_brucelose { get; set; }
+
+        public void CreditarSaldoVacinadoBrucelose(int saldo)
         {
-            this.Qtde_vacinado += saldo;
+            this.Qtde_vacinado_brucelose += saldo;
+        }
+        public void CreditarSaldoVacinadoAftosa(int saldo)
+        {
+            this.Qtde_vacinado_aftosa += saldo;
         }
 
         public bool ValidarQtdeVacinado()
         {
-            if(Qtde_total > Qtde_vacinado)
+            if(Qtde_total >= Qtde_vacinado_aftosa && Qtde_total >= Qtde_vacinado_brucelose)
             {
                 return true;
             }
@@ -45,22 +53,28 @@ namespace ControleBovideo.model
             }
         }
 
+        public void CreditarSaldoRebanhoVenda(int valor)
+        {
+            Qtde_total += valor;
+            Qtde_vacinado_aftosa += valor;
+            Qtde_vacinado_brucelose += valor;
+        }
         public void CreditarSaldoRebanho(int valor)
         {
             Qtde_total += valor;
-            Qtde_vacinado += valor;
         }
 
-        public bool DebitarSaldoRebanho(int valor)
+        public bool DebitarSaldoRebanhoVenda(int valor)
         {
-            if(valor > Qtde_total || valor > Qtde_vacinado)
+            if(valor > Qtde_total || valor > Qtde_vacinado_aftosa || valor > Qtde_vacinado_brucelose)
             {
                 return false;
             }
             else
             {
                 Qtde_total -= valor;
-                Qtde_vacinado -= valor;
+                Qtde_vacinado_aftosa -= valor;
+                Qtde_vacinado_brucelose -= valor;
                 return true;
             }
         }
