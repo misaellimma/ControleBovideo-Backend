@@ -29,7 +29,7 @@ namespace ControleBovideo.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Venda>> GetId(int? id)
+        public async Task<ActionResult<dynamic>> GetId(int? id)
         {
             if (id == null)
             {
@@ -42,7 +42,29 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
 
-            return venda;
+            var rebanhoOrigem = contexto.Rebanhos.Where(e => e.Id == venda.Rebanho_origem).FirstOrDefault();
+            var propriedade = contexto.Propriedades.Where(e => e.Id == rebanhoOrigem.Id_propriedade).FirstOrDefault();
+            var rebanhoDestino = contexto.Rebanhos.Where(e => e.Id == venda.Rebanho_destino).FirstOrDefault();
+            var prop = contexto.Propriedades.Where(e => e.Id == rebanhoDestino.Id_propriedade).FirstOrDefault();
+            var especie = contexto.EspecieBovideos.Where(e => e.Id == rebanhoOrigem.Id_especie).FirstOrDefault();
+            var finalidade = contexto.FinalidadeVendas.Where(e => e.Id == venda.Id_finalidade_venda).FirstOrDefault();
+            var obj = new
+            {
+                id = venda.Id,
+                id_propriedade_origem = propriedade.Id,
+                propriedade_origem = propriedade.Nome_propriedade,
+                id_propriedade_destino = prop.Id,
+                propriedade_destino = prop.Nome_propriedade,
+                venda.Rebanho_origem,
+                venda.Rebanho_destino,
+                especie = especie.Descricao,
+                venda.Id_finalidade_venda,
+                finalidade_venda = finalidade.Descricao,
+                venda.Qtde_vendida,
+                data = venda.Data.ToString("dd/MM/yyyy"),
+            };
+
+            return obj;
         }
 
         // GET api/<VendaController>/5
@@ -53,24 +75,9 @@ namespace ControleBovideo.Controllers
             {
                 return NotFound();
             }
-            List<Venda> todasVendas = new List<Venda>();
-            var obj = new
-            {
-                id = 0,
-                vendedor_origem = "",
-                propriedade_origem = "",
-                vendedor_destino = "",
-                propriedade_destino = "",
-                finalidade_venda = "",
-                especie = "",
-                qtde_vendida = 0,
-                data = ""
-            };
+            List<object> todasVendas = new List<object>();
 
-            List<Object> objs = new List<Object>();
-            
-
-            //var teste = contexto.Vendas.OrderBy(e => e.Id).Select()
+            //var teste = contexto.Vendas.OrderBy(e => e.Id).Where(e => e.Rebanho_destino == )
             
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
             foreach(var propriedade in propriedades)
@@ -81,19 +88,25 @@ namespace ControleBovideo.Controllers
                     var vendas = await contexto.Vendas.Where(e => e.Rebanho_origem == rebanho.Id).ToListAsync();
                     foreach(var venda in vendas)
                     {
-                        var ob = new
+                        var finalidade = contexto.FinalidadeVendas.Where(e => e.Id == venda.Id_finalidade_venda).FirstOrDefault();
+                        var prop = contexto.Propriedades.Where(e => e.Id == rebanho.Id_propriedade).FirstOrDefault();
+                        var especie = contexto.EspecieBovideos.Where(e => e.Id == rebanho.Id_especie).FirstOrDefault();
+                        var obj = new
                         {
                             id = venda.Id,
-                            vendedor_origem = "",
-                            propriedade_origem = "",
-                            vendedor_destino = "",
-                            propriedade_destino = "",
-                            finalidade_venda = "",
-                            especie = "",
-                            qtde_vendida = 0,
-                            data = ""
+                            id_propriedade_origem = propriedade.Id,
+                            propriedade_origem = propriedade.Nome_propriedade,
+                            id_propriedade_destino = prop.Id,
+                            propriedade_destino = prop.Nome_propriedade,
+                            venda.Rebanho_origem,
+                            venda.Rebanho_destino,
+                            especie = especie.Descricao,
+                            venda.Id_finalidade_venda,
+                            finalidade_venda = finalidade.Descricao,
+                            venda.Qtde_vendida,
+                            data = venda.Data.ToString("dd/MM/yyyy"),
                         };
-                        todasVendas.Add(venda);
+                        todasVendas.Add(obj);
                     }
                 }
             }
@@ -106,13 +119,13 @@ namespace ControleBovideo.Controllers
 
         // GET api/<VendaController>/5
         [HttpGet("compra={id}")]
-        public async Task<ActionResult<dynamic>> GetCompra(int? id)
+        public async Task<ActionResult<object>> GetCompra(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            List<Venda> todasVendas = new List<Venda>();
+            List<object> todasVendas = new List<object>();
 
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
             foreach (var propriedade in propriedades)
@@ -123,7 +136,25 @@ namespace ControleBovideo.Controllers
                     var vendas = await contexto.Vendas.Where(e => e.Rebanho_destino == rebanho.Id).ToListAsync();
                     foreach (var venda in vendas)
                     {
-                        todasVendas.Add(venda);
+                        var finalidade = contexto.FinalidadeVendas.Where(e => e.Id == venda.Id_finalidade_venda).FirstOrDefault();
+                        var prop = contexto.Propriedades.Where(e => e.Id == rebanho.Id_propriedade).FirstOrDefault();
+                        var especie = contexto.EspecieBovideos.Where(e => e.Id == rebanho.Id_especie).FirstOrDefault();
+                        var obj = new
+                        {
+                            id = venda.Id,
+                            id_propriedade_origem = prop.Id,
+                            propriedade_origem = prop.Nome_propriedade,
+                            id_propriedade_destino = propriedade.Id,
+                            propriedade_destino = propriedade.Nome_propriedade,
+                            venda.Rebanho_origem,
+                            venda.Rebanho_destino,
+                            especie = especie.Descricao,
+                            venda.Id_finalidade_venda,
+                            finalidade_venda = finalidade.Descricao,
+                            venda.Qtde_vendida,
+                            data = venda.Data.ToString("dd/MM/yyyy"),
+                        };
+                        todasVendas.Add(obj);
                     }
                 }
             }

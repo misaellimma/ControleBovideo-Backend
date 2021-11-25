@@ -37,6 +37,10 @@ namespace ControleBovideo.Controllers
                 return NotFound();
             }
             var registroVacina = await contexto.RegistroVacinas.FindAsync(id);
+            if (registroVacina == null)
+            {
+                return NotFound();
+            }
             var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
             var propriedade = await contexto.Propriedades.FindAsync(rebanho.Id_propriedade);
             var especie = await contexto.EspecieBovideos.FindAsync(rebanho.Id_especie);
@@ -50,13 +54,9 @@ namespace ControleBovideo.Controllers
                 registroVacina.Id_vacina,
                 vacina = vacina.Nome,
                 registroVacina.Qtde_vacinado,
-                registroVacina.Data
+                data = registroVacina.Data.ToString("dd/MM/yyyy")
             };
 
-            if (registroVacina == null)
-            {
-                return NotFound();
-            }
 
             return obj;
         }
@@ -92,7 +92,7 @@ namespace ControleBovideo.Controllers
                         rv.Id_vacina,
                         vacina = vacina.Nome,
                         rv.Qtde_vacinado,
-                        rv.Data
+                        data = rv.Data.ToString("dd/MM/yyyy")
                     };
                     registroVacinas.Add(obj);
                 }
@@ -198,9 +198,24 @@ namespace ControleBovideo.Controllers
             }
             var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
             var venda = await contexto.Vendas.OrderBy(e => e.Id)
-                        .Where(e => e.Rebanho_origem == rebanho.Id).LastAsync();
+                        .Where(e => e.Rebanho_origem == rebanho.Id).LastOrDefaultAsync();
             
-            if (registroVacina.CalculoData(venda.Data))
+            if (registroVacina.Id_vacina == 1)
+            {
+                rebanho.DebitarSaldoVacinadoAftosa(registroVacina.Qtde_vacinado);
+            }
+            else if (registroVacina.Id_vacina == 2)
+            {
+                rebanho.DebitarSaldoVacinadoBrucelose(registroVacina.Qtde_vacinado);
+            }
+
+            if (venda == null)
+            {
+                contexto.RegistroVacinas.Remove(registroVacina);
+                await contexto.SaveChangesAsync();
+                return NoContent();
+            }
+            else if(registroVacina.CalculoData(venda.Data))
             {
                 contexto.RegistroVacinas.Remove(registroVacina);
                 await contexto.SaveChangesAsync();

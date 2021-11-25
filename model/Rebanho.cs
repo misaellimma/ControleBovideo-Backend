@@ -36,7 +36,15 @@ namespace ControleBovideo.model
         {
             this.Qtde_vacinado_brucelose += saldo;
         }
+        public void DebitarSaldoVacinadoBrucelose(int saldo)
+        {
+            this.Qtde_vacinado_brucelose -= saldo;
+        }
         public void CreditarSaldoVacinadoAftosa(int saldo)
+        {
+            this.Qtde_vacinado_aftosa += saldo;
+        }
+        public void DebitarSaldoVacinadoAftosa(int saldo)
         {
             this.Qtde_vacinado_aftosa += saldo;
         }
