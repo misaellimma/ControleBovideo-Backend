@@ -101,6 +101,44 @@ namespace ControleBovideo.Controllers
             return registroVacinas;
         }
 
+        [HttpGet("rebanho/{id}")]
+        public async Task<ActionResult<dynamic>> GetRebanho(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            List<object> registroVacinas = new List<object>();
+
+            var registros = await contexto.RegistroVacinas.OrderByDescending(e => e.Id).Where(e => e.Id_rebanho == id).ToListAsync();
+            
+            if (registros == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var registro in registros)
+            {
+                var rebanho = await contexto.Rebanhos.OrderBy(e => e.Id).Where(e => e.Id == id).FirstOrDefaultAsync();
+                var vacina = await contexto.Vacinas.FindAsync(registro.Id_vacina);
+                var especie = await contexto.EspecieBovideos.FindAsync(rebanho.Id_especie);
+                var obj = new
+                {
+                    registro.Id,
+                    rebanho = especie.Descricao,
+                    registro.Id_rebanho,
+                    registro.Id_vacina,
+                    vacina = vacina.Nome,
+                    registro.Qtde_vacinado,
+                    data = registro.Data.ToString("dd/MM/yyyy")
+                };
+                registroVacinas.Add(obj);
+            }
+
+            return registroVacinas;
+        }
+
         // POST api/<Registro_vacinaController>
         [HttpPost]
         public async Task<ActionResult<RegistroVacina>> Post([FromBody] RegistroVacina registroVacina)
