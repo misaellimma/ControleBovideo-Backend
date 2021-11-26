@@ -13,12 +13,15 @@ namespace ControleBovideo.model
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Column("rebanho_origem")]
+        [Column("id_propriedade_origem")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        public int Rebanho_origem { get; set; }
-        [Column("rebanho_destino")]
+        public int Id_propriedade_origem { get; set; }
+        [Column("id_propriedade_destino")]
         [Required(ErrorMessage = "Campo obrigatório!")]
-        public int Rebanho_destino { get; set; }
+        public int Id_propriedade_destino { get; set; }
+        [Column("id_especie")]
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        public int Id_especie { get; set; }
         [Column("id_finalidade_venda")]
         [Required(ErrorMessage = "Campo obrigatório!")]
         public int Id_finalidade_venda { get; set; }

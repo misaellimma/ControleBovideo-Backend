@@ -39,7 +39,7 @@ namespace ControleBovideo.Controllers
                 nome_propriedade = propriedade.Nome_propriedade,
                 rebanho.Qtde_total,
                 rebanho.Qtde_vacinado_aftosa,
-                rebanho.Qtde_vacinado_brucelose
+                rebanho.Qtde_vacinado_brucelose,
             };
             return obj;
         }
@@ -70,7 +70,7 @@ namespace ControleBovideo.Controllers
                         propriedade.Nome_propriedade,
                         r.Qtde_total,
                         r.Qtde_vacinado_aftosa,
-                        r.Qtde_vacinado_brucelose
+                        r.Qtde_vacinado_brucelose,
                     };
 
                     

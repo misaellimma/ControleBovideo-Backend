@@ -14,8 +14,7 @@ GO
 
 INSERT INTO vacina(nome) VALUES
 ('Aftosa')
-,('Brucelose B19')
-,('Brucelose RB51')
+,('Brucelose (B19 ou RB51)')
 GO
 
 INSERT INTO municipio(nome) VALUES

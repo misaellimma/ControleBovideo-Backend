@@ -197,9 +197,9 @@ namespace ControleBovideo.Controllers
                 return NotFound("Não possui registro na base de dados!");
             }
             var rebanho = await contexto.Rebanhos.FindAsync(registroVacina.Id_rebanho);
-            var venda = await contexto.Vendas.OrderBy(e => e.Id)
-                        .Where(e => e.Rebanho_origem == rebanho.Id).LastOrDefaultAsync();
-            
+            var vendas = await contexto.Vendas.OrderBy(e => e.Id)
+                        .Where(e => e.Id_propriedade_origem == rebanho.Id_propriedade).ToListAsync();
+            var venda = vendas.Where(e => e.Id_especie == rebanho.Id_especie).LastOrDefault();
             if (registroVacina.Id_vacina == 1)
             {
                 rebanho.DebitarSaldoVacinadoAftosa(registroVacina.Qtde_vacinado);

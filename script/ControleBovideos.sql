@@ -46,7 +46,7 @@ CREATE TABLE [propriedade] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	id_produtor int NOT NULL REFERENCES produtor(id),
 	id_municipio int NOT NULL REFERENCES municipio(id),
-	incricao_estadual varchar(255) NOT NULL,
+	inscricao_estadual varchar(255) NOT NULL,
 	nome_propriedade varchar(255) NOT NULL
 )
 GO
@@ -70,8 +70,9 @@ CREATE TABLE [registro_vacina] (
 GO
 CREATE TABLE [venda] (
 	id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-	rebanho_origem int NOT NULL REFERENCES rebanho(id),
-	rebanho_destino int NOT NULL REFERENCES rebanho(id),
+	id_propriedade_origem int NOT NULL REFERENCES propriedade(id),
+	id_propriedade_destino int NOT NULL REFERENCES propriedade(id),
+	id_especie int NOT NULL REFERENCES especie_bovideo(id),
 	id_finalidade_venda int NOT NULL REFERENCES finalidade_venda(id),
 	qtde_vendida int NOT NULL,
 	[data] datetime NOT NULL
