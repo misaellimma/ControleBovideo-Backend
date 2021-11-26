@@ -64,7 +64,7 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<VendaController>/5
-        [HttpGet("venda={id}")]
+        [HttpGet("venda/{id}")]
         public async Task<ActionResult<dynamic>> GetVenda(int? id)
         {
             if (id == null)
@@ -109,7 +109,7 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<VendaController>/5
-        [HttpGet("compra={id}")]
+        [HttpGet("compra/{id}")]
         public async Task<ActionResult<object>> GetCompra(int? id)
         {
             if (id == null)

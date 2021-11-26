@@ -62,7 +62,7 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<Registro_vacinaController>/5
-        [HttpGet("propriedade={id}")]
+        [HttpGet("propriedade/{id}")]
         public async Task<ActionResult<dynamic>> Get(int? id)
         {
             if(id == null)

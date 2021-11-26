@@ -46,7 +46,7 @@ namespace ControleBovideo.Controllers
             return propriedade;
         }
 
-        [HttpGet("inscricao={inscricao}")]
+        [HttpGet("inscricao/{inscricao}")]
         public async Task<ActionResult<Propriedade>> GetIncricao(string inscricao)
         {
             if (inscricao == null)
@@ -72,7 +72,7 @@ namespace ControleBovideo.Controllers
             return propriedade;
         }
 
-        [HttpGet("validainscricao={inscricao}")]
+        [HttpGet("validainscricao/{inscricao}")]
         public async Task<ActionResult<Propriedade>> ValidaIncricao(string inscricao)
         {
             if (inscricao == null)
@@ -98,7 +98,7 @@ namespace ControleBovideo.Controllers
             return NoContent();
         }
 
-        [HttpGet("idprodutor={id}")]
+        [HttpGet("idprodutor/{id}")]
         public async Task<ActionResult<dynamic>> GetPropriedadesProdutor(int? id)
         {
             if (id == null)

@@ -48,7 +48,7 @@ namespace ControleBovideo.Controllers
         }
 
         // GET api/<ProdutorController>/5
-        [HttpGet("cpf={cpf}")]
+        [HttpGet("cpf/{cpf}")]
         public async Task<ActionResult<Produtor>> GetCpf(string cpf)
         {
             if (cpf == null)
@@ -72,7 +72,7 @@ namespace ControleBovideo.Controllers
             return produtor;
         }
 
-        [HttpGet("validacpf={cpf}")]
+        [HttpGet("validacpf/{cpf}")]
         public async Task<ActionResult<Produtor>> ValidaCpf(string cpf)
         {
             if (cpf == null)

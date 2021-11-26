@@ -44,14 +44,14 @@ namespace ControleBovideo.Controllers
             return obj;
         }
 
-        [HttpGet("especie={id}")]
+        [HttpGet("especie/{id}")]
         public Task<List<Rebanho>> GetEspecie(int? id)
         {
             var rebanho = contexto.Rebanhos.Where(e => e.Id_especie == id).ToListAsync();
             return rebanho;
         }
 
-        [HttpGet("idprodutor={id}")]
+        [HttpGet("idprodutor/{id}")]
         public async Task<List<dynamic>> GetAnimalProdutor(int? id)
         {
             var propriedades = await contexto.Propriedades.Where(e => e.Id_produtor == id).ToListAsync();
@@ -80,7 +80,7 @@ namespace ControleBovideo.Controllers
             return rebanho;
         }
 
-        [HttpGet("idpropriedade={id}")]
+        [HttpGet("idpropriedade/{id}")]
         public async Task<List<Rebanho>> GetAnimalPropriedade(int? id) 
         { 
             var rebanho = await contexto.Rebanhos.Where(e => e.Id_propriedade == id).ToListAsync();
